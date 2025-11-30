@@ -21,8 +21,7 @@ class ProductFactory extends Factory
         return [
             "name" => $this->faker->name,
             "price" => $this->faker->randomFloat(2, 0, 100),
-            "category_id" => Category::factory(),
-            "tenant_id" => Tenant::factory(),
+
         ];
     }
 }
