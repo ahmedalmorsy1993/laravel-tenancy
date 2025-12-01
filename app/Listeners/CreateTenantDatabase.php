@@ -33,6 +33,8 @@ class CreateTenantDatabase implements ShouldQueue
 
         $oldDbConnection =  config('database.connections.mysql.database');
         config(['database.connections.mysql.database' => $dbName]);
+
+        // Connection Caching: Laravel caches database connections. Even if you change the configuration, the existing mysql connection instance remains active and connected to the old database. You must call DB::purge('mysql') to disconnect and force Laravel to create a new connection with the updated configuration.
         DB::purge('mysql');
 
         Artisan::call("migrate", [
