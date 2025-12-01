@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory, Tenantable;
+    protected $connection = 'tenant';
+    // Tenantable we use it we using single database for all tenants
+    use HasFactory;
 
     protected $fillable = [
         'name',
