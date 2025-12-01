@@ -12,8 +12,15 @@ class Tenant extends Model
     protected $fillable = [
         'name',
         'domain',
+        'database_options',
     ];
 
+    protected function casts()
+    {
+        return [
+            'database_options' => 'json',
+        ];
+    }
     public function categories()
     {
         return $this->hasMany(Category::class);

@@ -18,8 +18,10 @@ class SetActiveTenant
     {
         $host = $request->getHost();
         $domain = explode('.', $host)[0];
-        $tenant = Tenant::where('domain', $domain)->firstOrFail();
-        app()->instance('tenant', $tenant);
+        $tenant = Tenant::where('domain', $domain)->first();
+        if ($tenant) {
+            app()->instance('tenant', $tenant);
+        }
         return $next($request);
     }
 }
