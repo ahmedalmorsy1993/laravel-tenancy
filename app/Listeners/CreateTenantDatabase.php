@@ -29,14 +29,19 @@ class CreateTenantDatabase implements ShouldQueue
         $tenant->database_options = [
             'dbname' => $dbName,
         ];
-        $oldDbConnection =  config('database.connections.mysql.database');
-        config('database.connections.mysql.database', $dbName);
         DB::statement("CREATE DATABASE `{$dbName}`");
+
+        $oldDbConnection =  config('database.connections.mysql.database');
+        config(['database.connections.mysql.database' => $dbName]);
+        DB::purge('mysql');
+
         Artisan::call("migrate", [
-            "--path" => database_path("migrations/tenants"),
+            "--path" => "database/migrations/tenants",
             "--force" => true,
         ]);
-        config('database.connections.mysql.database', $oldDbConnection);
+
+        config(['database.connections.mysql.database' => $oldDbConnection]);
+        DB::purge('mysql');
         $tenant->save();
     }
 }
