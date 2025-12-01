@@ -25,11 +25,18 @@ class CreateTenantDatabase implements ShouldQueue
     public function handle(TenantRegister $event): void
     {
         $tenant = $event->tenant;
-        DB::statement("CREATE DATABASE `store_{$tenant->id}`");
+        $dbName = "tenant_{$tenant->id}";
+        $tenant->database_options = [
+            'dbname' => $dbName,
+        ];
+        $oldDbConnection =  config('database.connections.mysql.database');
+        config('database.connections.mysql.database', $dbName);
+        DB::statement("CREATE DATABASE `{$dbName}`");
         Artisan::call("migrate", [
-            "--path" => "database/migrations/tenants",
-            "--database" => "store_{$tenant->id}",
+            "--path" => database_path("migrations/tenants"),
             "--force" => true,
         ]);
+        config('database.connections.mysql.database', $oldDbConnection);
+        $tenant->save();
     }
 }

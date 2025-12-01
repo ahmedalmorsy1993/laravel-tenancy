@@ -18,7 +18,7 @@ class Tenant extends Model
     protected function casts()
     {
         return [
-            'database_options' => 'json',
+            'database_options' => 'array',
         ];
     }
     public function categories()

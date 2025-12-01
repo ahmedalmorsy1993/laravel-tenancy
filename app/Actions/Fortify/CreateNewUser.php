@@ -45,8 +45,8 @@ class CreateNewUser implements CreatesNewUsers
                 'password' => $input['password'],
                 'tenant_id' => $tenant->id,
             ]);
-            DB::commit();
             event(new TenantRegister($tenant));
+            DB::commit();
             return $user;
         } catch (\Exception $e) {
             DB::rollBack();
